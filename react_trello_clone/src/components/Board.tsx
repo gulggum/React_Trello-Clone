@@ -2,6 +2,8 @@ import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import DragabbleCard from "./DragabbleCard";
 import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
 
 const BoardBox = styled.div`
   background-color: ${(props) => props.theme.boardColor};
@@ -33,11 +35,27 @@ interface IBoardProps {
   toDos: string[];
   boardId: string;
 }
+interface IForm {
+  toDo: string;
+}
 
 function Board({ toDos, boardId }: IBoardProps) {
+  const { register, handleSubmit, reset } = useForm<IForm>();
+
+  const onVaild = (todo: IForm) => {
+    console.log(todo);
+    reset();
+  };
   return (
     <BoardBox>
       <Title>{boardId}</Title>
+      <form onSubmit={handleSubmit(onVaild)}>
+        <input
+          {...register("toDo", { required: true })}
+          placeholder="Write todo please"
+        />
+        <button>✔️</button>
+      </form>
       <Droppable droppableId={boardId}>
         {(magic, snapshot) => (
           <Wrapper
