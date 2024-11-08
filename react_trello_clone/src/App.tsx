@@ -29,18 +29,42 @@ function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
 
   const onDragEnd = (info: DropResult) => {
-    console.log(info);
-    /* setToDos((oldToDos) => {
-      if (!destination) return oldToDos;
+    const { destination, draggableId, source } = info;
 
-      const toDoCopy = [...oldToDos];
-      // 1) 시작한곳에서 삭제
-      toDoCopy.splice(source.index, 1);
-      // 2) 종료지점에 추가
-      toDoCopy.splice(destination?.index, 0, draggableId);
-      return toDoCopy;
-    }); */
+    if (!destination) return;
+
+    console.log(info);
+
+    if (destination?.droppableId === source?.droppableId) {
+      setToDos((allBoards) => {
+        const boardCopy = [...allBoards[source.droppableId]];
+        // 1) 시작한곳에서 삭제
+        boardCopy.splice(source.index, 1);
+        // 2) 종료지점에 추가
+        boardCopy.splice(destination?.index, 0, draggableId);
+
+        return {
+          ...allBoards,
+          [source.droppableId]: boardCopy,
+        };
+      });
+    }
+    if (destination.droppableId !== source?.droppableId) {
+      //cross board movement
+      setToDos((allBoards) => {
+        const sourceBoard = [...allBoards[source.droppableId]];
+        const destiBoard = [...allBoards[destination.droppableId]];
+        sourceBoard.splice(source.index, 1);
+        destiBoard.splice(destination.index, 0, draggableId);
+        return {
+          ...allBoards,
+          [source.droppableId]: sourceBoard,
+          [destination.droppableId]: destiBoard,
+        };
+      });
+    }
   };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Container>
