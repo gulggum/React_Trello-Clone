@@ -38,10 +38,11 @@ function App() {
     if (destination?.droppableId === source?.droppableId) {
       setToDos((allBoards) => {
         const boardCopy = [...allBoards[source.droppableId]];
+        const taskObj = boardCopy[source.index];
         // 1) 시작한곳에서 삭제
         boardCopy.splice(source.index, 1);
         // 2) 종료지점에 추가
-        boardCopy.splice(destination?.index, 0, draggableId);
+        boardCopy.splice(destination?.index, 0, taskObj);
 
         return {
           ...allBoards,
@@ -53,9 +54,10 @@ function App() {
       //cross board movement
       setToDos((allBoards) => {
         const sourceBoard = [...allBoards[source.droppableId]];
+        const taskObj = sourceBoard[source.index];
         const destiBoard = [...allBoards[destination.droppableId]];
         sourceBoard.splice(source.index, 1);
-        destiBoard.splice(destination.index, 0, draggableId);
+        destiBoard.splice(destination.index, 0, taskObj);
         return {
           ...allBoards,
           [source.droppableId]: sourceBoard,
