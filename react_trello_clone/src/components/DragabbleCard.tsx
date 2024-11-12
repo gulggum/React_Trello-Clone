@@ -13,9 +13,14 @@ const Card = styled.div<IDragging>`
   padding: 10px 10px;
   background-color: ${(props) => (props.isDragging ? "tomato" : "white")};
   display: flex;
-  align-items: center;
+`;
+
+const CardEdit = styled.div`
+  width: 100%;
+  display: flex;
   justify-content: space-between;
 `;
+
 const Button = styled.div`
   button {
     margin-top: 11px;
@@ -25,6 +30,10 @@ const Button = styled.div`
     margin-top: -10px;
     cursor: pointer;
   }
+`;
+
+const EditInput = styled.input`
+  width: 70%;
 `;
 
 interface IDragabbleCardProps {
@@ -58,6 +67,34 @@ function DragabbleCard({
         return todo;
       });
       return { ...prevBoards, [boardId]: updateBoard };
+    });
+  };
+
+  //수정버튼 클릭시 input값으로 변경
+  const onChangeTextEdit = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAllBoards((prevBoards) => {
+      const updateBoards = prevBoards[boardId].map((todo) => {
+        if (todo.TodoId === TodoId) {
+          return { ...todo, editText: event.target.value };
+        }
+        return todo;
+      });
+      return { ...prevBoards, [boardId]: updateBoards };
+    });
+  };
+
+  const onSaveEdit = () => {
+    setAllBoards((prevBoards) => {
+      const updateBoards = prevBoards[boardId].map((todo) => {
+        if (todo.TodoId === TodoId) {
+          return { ...todo, isEditing: false, editText: editText };
+        }
+        return todo;
+      });
+      return {
+        ...prevBoards,
+        [boardId]: updateBoards,
+      };
     });
   };
 
@@ -99,19 +136,29 @@ function DragabbleCard({
           {...magic.dragHandleProps}
           {...magic.draggableProps}
         >
-          {TodoText}
-          <Button>
-            {isEditing ? (
+          {isEditing ? (
+            <>
+              <EditInput
+                type="text"
+                value={editText}
+                onChange={onChangeTextEdit}
+              ></EditInput>
+              <Button>
+                <button onClick={onSaveEdit}>✔️</button>
+                <button onClick={onCancelEdit}>❌</button>
+              </Button>
+            </>
+          ) : (
+            <CardEdit>
               <>
-                <button>수정</button>
-                <button onClick={onCancelEdit}>취소</button>
+                <div>{TodoText}</div>
+                <Button>
+                  <button onClick={onEdit}>✏️</button>
+                  <button onClick={onDelete}>❌</button>
+                </Button>
               </>
-            ) : (
-              <button onClick={onEdit}>✏️</button>
-            )}
-
-            <button onClick={onDelete}>❌</button>
-          </Button>
+            </CardEdit>
+          )}
         </Card>
       )}
     </Draggable>
