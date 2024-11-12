@@ -68,6 +68,8 @@ function Board({ toDos, boardId }: IBoardProps) {
     const newTodo = {
       TodoId: Date.now(),
       TodoText: toDo,
+      isEditing: false, //atoms에 ITodo에 isEditing,editText가 추가되어 같이 입력해줌
+      editText: "",
     };
     setToDos((allBoards) => {
       return {

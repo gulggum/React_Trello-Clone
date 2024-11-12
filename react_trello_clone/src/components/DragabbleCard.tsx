@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { ITodo, ITodoState, toDoState } from "../atoms";
 
@@ -40,7 +40,28 @@ function DragabbleCard({
   TodoText,
   boardId,
 }: IDragabbleCardProps) {
-  const setAllBoards = useSetRecoilState(toDoState);
+  const [allBoards, setAllBoards] = useRecoilState(toDoState);
+
+  //현재 todo항목 찾기
+  const todo = allBoards[boardId].find((todo) => todo.TodoId === TodoId);
+  if (!todo) return null;
+
+  const { isEditing, editText } = todo;
+
+  //수정 시작기능
+  const onEdit = () => {
+    setAllBoards((prevBoards) => {
+      const updateBoard = prevBoards[boardId].map((todo) => {
+        if (todo.TodoId === TodoId) {
+          return { ...todo, isEditing: true, editText: todo.TodoText };
+        }
+        return todo;
+      });
+      return { ...prevBoards, [boardId]: updateBoard };
+    });
+  };
+
+  //삭제기능구현
   const onDelete = () => {
     setAllBoards((prevBoards: ITodoState) => {
       const upDateBoard = prevBoards[boardId].filter(
@@ -64,7 +85,15 @@ function DragabbleCard({
         >
           {TodoText}
           <Button>
-            <button>✏️</button>
+            {isEditing ? (
+              <>
+                <button>수정</button>
+                <button>취소</button>
+              </>
+            ) : (
+              <button onClick={onEdit}>✏️</button>
+            )}
+
             <button onClick={onDelete}>❌</button>
           </Button>
         </Card>
