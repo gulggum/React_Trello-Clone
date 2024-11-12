@@ -61,15 +61,31 @@ function DragabbleCard({
     });
   };
 
+  //수정 취소기능
+  const onCancelEdit = () => {
+    setAllBoards((prevBoards) => {
+      const updateBoard = prevBoards[boardId].map((todo) => {
+        if (todo.TodoId === TodoId) {
+          return { ...todo, isEditing: false, editText: todo.TodoText };
+        }
+        return todo;
+      });
+      return {
+        ...prevBoards,
+        [boardId]: updateBoard,
+      };
+    });
+  };
+
   //삭제기능구현
   const onDelete = () => {
     setAllBoards((prevBoards: ITodoState) => {
-      const upDateBoard = prevBoards[boardId].filter(
+      const updateBoard = prevBoards[boardId].filter(
         (todo) => todo.TodoId !== TodoId
       );
       return {
         ...prevBoards,
-        [boardId]: upDateBoard,
+        [boardId]: updateBoard,
       };
     });
   };
@@ -88,7 +104,7 @@ function DragabbleCard({
             {isEditing ? (
               <>
                 <button>수정</button>
-                <button>취소</button>
+                <button onClick={onCancelEdit}>취소</button>
               </>
             ) : (
               <button onClick={onEdit}>✏️</button>
