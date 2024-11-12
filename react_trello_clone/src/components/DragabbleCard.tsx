@@ -84,6 +84,11 @@ function DragabbleCard({
   };
 
   const onSaveEdit = () => {
+    if (editText.trim() === "") {
+      //빈칸으로도 저장되어 조건문설정
+      alert("text를 입력해주세요");
+      return;
+    }
     setAllBoards((prevBoards) => {
       const updateBoards = prevBoards[boardId].map((todo) => {
         if (todo.TodoId === TodoId) {
@@ -96,6 +101,13 @@ function DragabbleCard({
         [boardId]: updateBoards,
       };
     });
+  };
+
+  //enter키로 수정진행
+  const onkeydown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      onSaveEdit();
+    }
   };
 
   //수정 취소기능
@@ -142,6 +154,7 @@ function DragabbleCard({
                 type="text"
                 value={editText}
                 onChange={onChangeTextEdit}
+                onKeyDown={onkeydown}
               ></EditInput>
               <Button>
                 <button onClick={onSaveEdit}>✔️</button>
