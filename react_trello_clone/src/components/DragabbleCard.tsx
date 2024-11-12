@@ -75,7 +75,7 @@ function DragabbleCard({
     setAllBoards((prevBoards) => {
       const updateBoards = prevBoards[boardId].map((todo) => {
         if (todo.TodoId === TodoId) {
-          return { ...todo, editText: event.target.value };
+          return { ...todo, editText: event.currentTarget.value };
         }
         return todo;
       });
@@ -87,7 +87,7 @@ function DragabbleCard({
     setAllBoards((prevBoards) => {
       const updateBoards = prevBoards[boardId].map((todo) => {
         if (todo.TodoId === TodoId) {
-          return { ...todo, isEditing: false, editText: editText };
+          return { ...todo, isEditing: false, TodoText: editText };
         }
         return todo;
       });
