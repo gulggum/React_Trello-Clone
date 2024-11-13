@@ -1,9 +1,10 @@
 import React from "react";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { toDoState } from "./atoms";
+import { ITodoState, toDoState } from "./atoms";
 import Board from "./components/Board";
+import TrashDrag from "./components/TrashDrag";
 
 const Container = styled.div`
   max-width: 700px;
@@ -12,6 +13,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   padding: 50px 20px;
 `;
 
@@ -29,11 +31,9 @@ function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
 
   const onDragEnd = (info: DropResult) => {
-    const { destination, draggableId, source } = info;
+    const { destination, source } = info;
 
     if (!destination) return;
-
-    console.log(info);
 
     if (destination?.droppableId === source?.droppableId) {
       setToDos((allBoards) => {
@@ -65,6 +65,10 @@ function App() {
         };
       });
     }
+
+    //쓰레기통 드래그 삭제기능
+    if (destination.droppableId === "trash") {
+    }
   };
 
   return (
@@ -75,6 +79,7 @@ function App() {
             <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
           ))}
         </Boards>
+        <TrashDrag />
       </Container>
     </DragDropContext>
   );
