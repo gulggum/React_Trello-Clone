@@ -10,7 +10,7 @@ const TrashIcon = styled.div<ITrashIconProps>`
   font-size: 30px;
   transform: ${(props) => (props.isDraggingOver ? "scale(1.2)" : "scale(1)")};
   transition: trasform 0.1s ease;
-  margin: 0;
+  position: relative;
 `;
 
 function TrashDrag() {

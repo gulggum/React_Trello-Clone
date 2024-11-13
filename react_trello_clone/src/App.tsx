@@ -11,20 +11,34 @@ const Container = styled.div`
   margin: 0 auto;
   height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
+
   flex-direction: column;
-  padding: 50px 20px;
+  padding: 40px 20px;
+`;
+const Headers = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  div:last-child {
+    margin-top: 10px;
+  }
+`;
+
+const Titie = styled.h1`
+  font-size: 30px;
+  font-weight: 600;
 `;
 
 const Boards = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   width: 100%;
-  padding: 30px 20px;
+  padding: 20px 20px;
   border-radius: 5px;
-  min-height: 200px;
-  gap: 10px;
+  min-height: auto;
+  gap: 20px;
 `;
 
 function App() {
@@ -76,12 +90,18 @@ function App() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Container>
+        <Headers>
+          <div></div>
+          <Titie>Todo Trello</Titie>
+          <div>
+            <TrashDrag />
+          </div>
+        </Headers>
         <Boards>
           {Object.keys(toDos).map((boardId) => (
             <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
           ))}
         </Boards>
-        <TrashDrag />
       </Container>
     </DragDropContext>
   );

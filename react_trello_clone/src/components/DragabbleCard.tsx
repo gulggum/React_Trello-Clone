@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { ITodo, ITodoState, toDoState } from "../atoms";
+import { ITodoState, toDoState } from "../atoms";
 
 interface IDragging {
   isDragging: boolean;
@@ -13,15 +13,20 @@ const Card = styled.div<IDragging>`
   padding: 10px 10px;
   background-color: ${(props) => (props.isDragging ? "tomato" : "white")};
   display: flex;
+  font-size: 15px;
 `;
 
 const CardEdit = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const Button = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
   button {
     margin-top: 11px;
     background: none;
@@ -33,7 +38,9 @@ const Button = styled.div`
 `;
 
 const EditInput = styled.input`
-  width: 70%;
+  width: 80%;
+  border: none;
+  border-bottom: 1px solid black;
 `;
 
 interface IDragabbleCardProps {
@@ -164,7 +171,7 @@ function DragabbleCard({
           ) : (
             <CardEdit>
               <>
-                <div>{TodoText}</div>
+                <span>{TodoText}</span>
                 <Button>
                   <button onClick={onEdit}>✏️</button>
                   <button onClick={onDelete}>❌</button>
