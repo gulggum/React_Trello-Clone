@@ -1,8 +1,8 @@
 import React from "react";
-import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { ITodoState, toDoState } from "./atoms";
+import { toDoState } from "./atoms";
 import Board from "./components/Board";
 import TrashDrag from "./components/TrashDrag";
 
@@ -32,10 +32,17 @@ function App() {
 
   const onDragEnd = (info: DropResult) => {
     const { destination, source } = info;
-
+    console.log(info);
+    console.log(destination?.droppableId);
     if (!destination) return;
-
-    if (destination?.droppableId === source?.droppableId) {
+    //쓰레기통 드래그 삭제기능
+    if (destination.droppableId === "trash") {
+      setToDos((allBoards) => {
+        const removeCard = [...allBoards[source.droppableId]];
+        removeCard.splice(source.index, 1);
+        return { ...allBoards, [source.droppableId]: removeCard };
+      });
+    } else if (destination?.droppableId === source?.droppableId) {
       setToDos((allBoards) => {
         const boardCopy = [...allBoards[source.droppableId]];
         const taskObj = boardCopy[source.index];
@@ -49,8 +56,7 @@ function App() {
           [source.droppableId]: boardCopy,
         };
       });
-    }
-    if (destination.droppableId !== source?.droppableId) {
+    } else if (destination.droppableId !== source?.droppableId) {
       //cross board movement
       setToDos((allBoards) => {
         const sourceBoard = [...allBoards[source.droppableId]];
@@ -64,10 +70,6 @@ function App() {
           [destination.droppableId]: destiBoard,
         };
       });
-    }
-
-    //쓰레기통 드래그 삭제기능
-    if (destination.droppableId === "trash") {
     }
   };
 
